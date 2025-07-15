@@ -1,16 +1,20 @@
 import { formatDistanceToNow } from 'date-fns';
+import { YouTubeVideo } from '@/services/youtubeApi';
 
-interface VideoCardProps {
-  id: string;
-  title: string;
-  creator: string;
-  views: number;
-  uploadedAt: Date;
-  thumbnail: string;
-  duration?: string;
+interface VideoCardProps extends YouTubeVideo {
+  onClick?: () => void;
 }
 
-export function VideoCard({ title, creator, views, uploadedAt, thumbnail, duration }: VideoCardProps) {
+export function VideoCard({ 
+  id, 
+  title, 
+  channelTitle, 
+  publishedAt, 
+  thumbnail, 
+  viewCount, 
+  duration, 
+  onClick 
+}: VideoCardProps) {
   const formatViews = (views: number) => {
     if (views >= 1000000) {
       return `${(views / 1000000).toFixed(1)}M views`;
@@ -20,10 +24,19 @@ export function VideoCard({ title, creator, views, uploadedAt, thumbnail, durati
     return `${views} views`;
   };
 
-  const timeAgo = formatDistanceToNow(uploadedAt, { addSuffix: true });
+  const timeAgo = formatDistanceToNow(new Date(publishedAt), { addSuffix: true });
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      // Apri il video su YouTube
+      window.open(`https://www.youtube.com/watch?v=${id}`, '_blank');
+    }
+  };
 
   return (
-    <div className="group cursor-pointer animate-fade-in">
+    <div className="group cursor-pointer animate-fade-in" onClick={handleClick}>
       <div className="relative overflow-hidden rounded-lg mb-3 bg-muted">
         <img 
           src={thumbnail} 
@@ -42,10 +55,10 @@ export function VideoCard({ title, creator, views, uploadedAt, thumbnail, durati
           {title}
         </h3>
         <p className="text-muted-foreground text-sm">
-          {creator}
+          {channelTitle}
         </p>
         <p className="text-muted-foreground text-sm">
-          {formatViews(views)} • {timeAgo}
+          {formatViews(viewCount)} • {timeAgo}
         </p>
       </div>
     </div>
