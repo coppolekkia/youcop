@@ -1,4 +1,5 @@
 import { formatDistanceToNow } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 import { YouTubeVideo } from '@/services/youtubeApi';
 
 interface VideoCardProps extends YouTubeVideo {
@@ -15,6 +16,8 @@ export function VideoCard({
   duration, 
   onClick 
 }: VideoCardProps) {
+  const navigate = useNavigate();
+  
   const formatViews = (views: number) => {
     if (views >= 1000000) {
       return `${(views / 1000000).toFixed(1)}M views`;
@@ -30,8 +33,8 @@ export function VideoCard({
     if (onClick) {
       onClick();
     } else {
-      // Apri il video su YouTube
-      window.open(`https://www.youtube.com/watch?v=${id}`, '_blank');
+      // Naviga alla pagina del video
+      navigate(`/video/${id}`);
     }
   };
 

@@ -164,6 +164,37 @@ class YouTubeApiService {
     
     return this.getPopularVideos(categoryId, maxResults);
   }
+
+  async getVideoDetails(videoId: string): Promise<YouTubeVideo> {
+    try {
+      const params = {
+        part: 'snippet,statistics,contentDetails',
+        id: videoId,
+      };
+
+      const data = await this.fetchFromYouTube('videos', params);
+      
+      if (!data.items || data.items.length === 0) {
+        throw new Error('Video not found');
+      }
+
+      const item = data.items[0];
+      return {
+        id: item.id,
+        title: item.snippet.title,
+        channelTitle: item.snippet.channelTitle,
+        publishedAt: item.snippet.publishedAt,
+        thumbnail: item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default?.url,
+        viewCount: this.formatViewCount(item.statistics.viewCount),
+        duration: this.parseIsoDuration(item.contentDetails.duration),
+        description: item.snippet.description,
+        categoryId: item.snippet.categoryId,
+      };
+    } catch (error) {
+      console.error('Error fetching video details:', error);
+      throw error;
+    }
+  }
 }
 
 export const youtubeApi = new YouTubeApiService();
