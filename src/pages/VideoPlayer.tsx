@@ -1,10 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { ArrowLeft, ThumbsUp, ThumbsDown, Share2, Download, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, ThumbsUp, ThumbsDown, Download, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { youtubeApi, YouTubeVideo } from '@/services/youtubeApi';
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
+import { Helmet } from 'react-helmet-async';
+import { ShareDialog } from '@/components/ShareDialog';
 
 const VideoPlayer = () => {
   const { videoId } = useParams<{ videoId: string }>();
@@ -85,10 +87,39 @@ const VideoPlayer = () => {
     );
   }
 
+  const currentUrl = `${window.location.origin}/video/${videoId}`;
+  const videoDescription = video?.description || `Watch ${video?.title} on our platform`;
   const timeAgo = formatDistanceToNow(new Date(video.publishedAt), { addSuffix: true });
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>{video ? `${video.title} - Video Platform` : 'Loading...'}</title>
+        <meta name="description" content={videoDescription} />
+        
+        {/* Open Graph tags */}
+        <meta property="og:title" content={video?.title || 'Video Platform'} />
+        <meta property="og:description" content={videoDescription} />
+        <meta property="og:image" content={video?.thumbnail || ''} />
+        <meta property="og:url" content={currentUrl} />
+        <meta property="og:type" content="video.other" />
+        <meta property="og:site_name" content="Video Platform" />
+        
+        {/* Twitter Card tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={video?.title || 'Video Platform'} />
+        <meta name="twitter:description" content={videoDescription} />
+        <meta name="twitter:image" content={video?.thumbnail || ''} />
+        
+        {/* Video specific meta tags */}
+        {video && (
+          <>
+            <meta property="video:duration" content={video.duration} />
+            <meta property="video:release_date" content={video.publishedAt} />
+            <meta property="article:author" content={video.channelTitle} />
+          </>
+        )}
+      </Helmet>
       {/* Header */}
       <div className="p-4 border-b">
         <Button 
@@ -131,10 +162,11 @@ const VideoPlayer = () => {
               <Button variant="outline" size="sm">
                 <ThumbsDown className="w-4 h-4" />
               </Button>
-              <Button variant="outline" size="sm">
-                <Share2 className="w-4 h-4 mr-2" />
-                Share
-              </Button>
+              <ShareDialog 
+                videoId={videoId!}
+                videoTitle={video.title}
+                videoThumbnail={video.thumbnail}
+              />
               <Button variant="outline" size="sm">
                 <Download className="w-4 h-4 mr-2" />
                 Download
