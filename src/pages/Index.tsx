@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Header } from '@/components/Header';
 import { CategoryNav } from '@/components/CategoryNav';
 import { VideoCard } from '@/components/VideoCard';
+import { VideoFilters, FilterOptions } from '@/components/VideoFilters';
 import { youtubeApi, YouTubeVideo } from '@/services/youtubeApi';
 import { useToast } from '@/hooks/use-toast';
 
@@ -10,6 +11,12 @@ const Index = () => {
   const [videos, setVideos] = useState<YouTubeVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState<FilterOptions>({
+    sortBy: 'relevance',
+    uploadDate: 'all',
+    duration: 'all',
+    viewCount: 'all'
+  });
   const { toast } = useToast();
 
   const loadVideos = async (category: string, query?: string) => {
@@ -51,12 +58,134 @@ const Index = () => {
     loadVideos('All', query);
   };
 
+  const handleFiltersChange = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      sortBy: 'relevance',
+      uploadDate: 'all',
+      duration: 'all',
+      viewCount: 'all'
+    });
+  };
+
+  // Helper function to parse duration string to minutes
+  const parseDurationToMinutes = (duration: string): number => {
+    const parts = duration.split(':');
+    if (parts.length === 2) {
+      return parseInt(parts[0]) + parseInt(parts[1]) / 60;
+    } else if (parts.length === 3) {
+      return parseInt(parts[0]) * 60 + parseInt(parts[1]) + parseInt(parts[2]) / 60;
+    }
+    return 0;
+  };
+
+  // Apply filters to videos
+  const filteredVideos = useMemo(() => {
+    if (!videos.length) return videos;
+
+    let filtered = [...videos];
+
+    // Apply upload date filter
+    if (filters.uploadDate !== 'all') {
+      const now = new Date();
+      const filterDate = new Date();
+      
+      switch (filters.uploadDate) {
+        case 'hour':
+          filterDate.setHours(now.getHours() - 1);
+          break;
+        case 'today':
+          filterDate.setHours(0, 0, 0, 0);
+          break;
+        case 'week':
+          filterDate.setDate(now.getDate() - 7);
+          break;
+        case 'month':
+          filterDate.setMonth(now.getMonth() - 1);
+          break;
+        case 'year':
+          filterDate.setFullYear(now.getFullYear() - 1);
+          break;
+      }
+      
+      filtered = filtered.filter(video => 
+        new Date(video.publishedAt) >= filterDate
+      );
+    }
+
+    // Apply duration filter
+    if (filters.duration !== 'all') {
+      filtered = filtered.filter(video => {
+        const minutes = parseDurationToMinutes(video.duration || '0:00');
+        switch (filters.duration) {
+          case 'short':
+            return minutes < 4;
+          case 'medium':
+            return minutes >= 4 && minutes <= 20;
+          case 'long':
+            return minutes > 20;
+          default:
+            return true;
+        }
+      });
+    }
+
+    // Apply view count filter
+    if (filters.viewCount !== 'all') {
+      filtered = filtered.filter(video => {
+        const views = video.viewCount || 0;
+        switch (filters.viewCount) {
+          case 'low':
+            return views < 100000;
+          case 'medium':
+            return views >= 100000 && views <= 1000000;
+          case 'high':
+            return views > 1000000;
+          default:
+            return true;
+        }
+      });
+    }
+
+    // Apply sorting
+    switch (filters.sortBy) {
+      case 'newest':
+        filtered.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+        break;
+      case 'oldest':
+        filtered.sort((a, b) => new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime());
+        break;
+      case 'mostViewed':
+        filtered.sort((a, b) => (b.viewCount || 0) - (a.viewCount || 0));
+        break;
+      case 'leastViewed':
+        filtered.sort((a, b) => (a.viewCount || 0) - (b.viewCount || 0));
+        break;
+      case 'relevance':
+      default:
+        // Keep original order for relevance
+        break;
+    }
+
+    return filtered;
+  }, [videos, filters]);
+
   return (
     <div className="min-h-screen bg-background">
       <Header onSearch={handleSearch} searchQuery={searchQuery} />
       <CategoryNav 
         activeCategory={activeCategory}
         onCategoryChange={handleCategoryChange}
+      />
+      
+      <VideoFilters
+        filters={filters}
+        onFiltersChange={handleFiltersChange}
+        onClearFilters={handleClearFilters}
+        totalVideos={filteredVideos.length}
       />
       
       <main className="px-6 py-6">
@@ -75,7 +204,7 @@ const Index = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-            {videos.map((video) => (
+            {filteredVideos.map((video) => (
               <VideoCard
                 key={video.id}
                 {...video}
@@ -84,7 +213,7 @@ const Index = () => {
           </div>
         )}
         
-        {!loading && videos.length === 0 && (
+        {!loading && filteredVideos.length === 0 && (
           <div className="text-center py-12">
             <p className="text-muted-foreground text-lg">
               {searchQuery ? 'No videos found for your search.' : 'No videos found in this category.'}

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Share2, Copy, Check, Facebook, Twitter, MessageCircle } from 'lucide-react';
@@ -60,6 +60,9 @@ export function ShareDialog({ videoId, videoTitle, videoThumbnail }: ShareDialog
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Share Video</DialogTitle>
+          <DialogDescription>
+            Condividi questo video con i tuoi amici sui social media o copia il link
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           {/* Video Preview */}
