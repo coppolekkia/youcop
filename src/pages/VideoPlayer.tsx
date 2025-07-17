@@ -94,14 +94,14 @@ const VideoPlayer = () => {
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>{video ? `${video.title} - Video Platform` : 'Loading...'}</title>
-        <meta name="description" content={videoDescription} />
+        <title>{video ? `${video.title}` : 'Caricamento...'}</title>
+        <meta name="description" content={video?.title ? `Guarda "${video.title}" di ${video.channelTitle}. ${video.description || 'Video fantastico sulla nostra piattaforma.'}` : videoDescription} />
         
-        {/* Open Graph tags for Facebook */}
+        {/* Rimuovi meta tag di default e sostituisci con quelli specifici del video */}
         <meta property="og:title" content={video?.title || 'Video Platform'} />
-        <meta property="og:description" content={videoDescription} />
+        <meta property="og:description" content={video?.title ? `Guarda "${video.title}" di ${video.channelTitle}. Video incredibile!` : videoDescription} />
         <meta property="og:image" content={video?.thumbnail?.replace('hqdefault', 'maxresdefault') || ''} />
-        <meta property="og:image:alt" content={`Thumbnail del video: ${video?.title || 'Video'}`} />
+        <meta property="og:image:alt" content={`Anteprima: ${video?.title || 'Video'}`} />
         <meta property="og:image:width" content="1280" />
         <meta property="og:image:height" content="720" />
         <meta property="og:image:type" content="image/jpeg" />
@@ -110,7 +110,7 @@ const VideoPlayer = () => {
         <meta property="og:site_name" content="Video Platform" />
         <meta property="og:locale" content="it_IT" />
         
-        {/* Facebook specific video meta tags */}
+        {/* Video meta tags specifici */}
         <meta property="og:video" content={`https://www.youtube.com/watch?v=${videoId}`} />
         <meta property="og:video:url" content={`https://www.youtube.com/watch?v=${videoId}`} />
         <meta property="og:video:secure_url" content={`https://www.youtube.com/watch?v=${videoId}`} />
@@ -118,31 +118,32 @@ const VideoPlayer = () => {
         <meta property="og:video:width" content="1280" />
         <meta property="og:video:height" content="720" />
         
-        {/* Twitter Card tags */}
+        {/* Twitter/X Card tags specifici */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@VideoPlattform" />
-        <meta name="twitter:creator" content="@VideoPlattform" />
+        <meta name="twitter:creator" content={`@${video?.channelTitle?.replace(/\s+/g, '') || 'VideoPlattform'}`} />
         <meta name="twitter:title" content={video?.title || 'Video Platform'} />
-        <meta name="twitter:description" content={videoDescription} />
+        <meta name="twitter:description" content={video?.title ? `Guarda "${video.title}" di ${video.channelTitle}` : videoDescription} />
         <meta name="twitter:image" content={video?.thumbnail?.replace('hqdefault', 'maxresdefault') || ''} />
-        <meta name="twitter:image:alt" content={`Thumbnail del video: ${video?.title || 'Video'}`} />
+        <meta name="twitter:image:alt" content={`Anteprima del video: ${video?.title || 'Video'}`} />
+        <meta name="twitter:player" content={`https://www.youtube.com/embed/${videoId}`} />
+        <meta name="twitter:player:width" content="1280" />
+        <meta name="twitter:player:height" content="720" />
         
-        {/* Additional meta tags for better sharing */}
+        {/* Meta tag aggiuntivi per il SEO */}
+        <meta name="author" content={video?.channelTitle || 'Video Platform'} />
         <meta property="article:author" content={video?.channelTitle || 'Video Platform'} />
         <meta property="article:published_time" content={video?.publishedAt || ''} />
-        <meta name="author" content={video?.channelTitle || 'Video Platform'} />
+        <meta property="video:duration" content={video?.duration || ''} />
+        <meta property="video:release_date" content={video?.publishedAt || ''} />
         
-        {/* Video specific meta tags */}
-        {video && (
-          <>
-            <meta property="video:duration" content={video.duration} />
-            <meta property="video:release_date" content={video.publishedAt} />
-            <meta name="video_type" content="application/x-shockwave-flash" />
-          </>
-        )}
-        
-        {/* Canonical URL */}
+        {/* URL canonico */}
         <link rel="canonical" href={currentUrl} />
+        
+        {/* Preload immagine per migliorare le performance */}
+        {video?.thumbnail && (
+          <link rel="preload" as="image" href={video.thumbnail.replace('hqdefault', 'maxresdefault')} />
+        )}
       </Helmet>
       {/* Header */}
       <div className="p-4 border-b">
