@@ -100,10 +100,20 @@ const VideoPlayer = () => {
         {/* Open Graph tags */}
         <meta property="og:title" content={video?.title || 'Video Platform'} />
         <meta property="og:description" content={videoDescription} />
-        <meta property="og:image" content={video?.thumbnail || ''} />
+        <meta property="og:image" content={video?.thumbnail?.replace('hqdefault', 'maxresdefault') || ''} />
+        <meta property="og:image:width" content="1280" />
+        <meta property="og:image:height" content="720" />
+        <meta property="og:image:type" content="image/jpeg" />
         <meta property="og:url" content={currentUrl} />
         <meta property="og:type" content="video.other" />
         <meta property="og:site_name" content="Video Platform" />
+        <meta property="og:video" content={`https://www.youtube.com/embed/${videoId}`} />
+        <meta property="og:video:url" content={`https://www.youtube.com/embed/${videoId}`} />
+        <meta property="og:video:secure_url" content={`https://www.youtube.com/embed/${videoId}`} />
+        <meta property="og:video:type" content="text/html" />
+        <meta property="og:video:width" content="1280" />
+        <meta property="og:video:height" content="720" />
+        <meta property="og:locale" content="it_IT" />
         
         {/* Twitter Card tags */}
         <meta name="twitter:card" content="summary_large_image" />
