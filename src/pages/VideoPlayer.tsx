@@ -97,38 +97,52 @@ const VideoPlayer = () => {
         <title>{video ? `${video.title} - Video Platform` : 'Loading...'}</title>
         <meta name="description" content={videoDescription} />
         
-        {/* Open Graph tags */}
+        {/* Open Graph tags for Facebook */}
         <meta property="og:title" content={video?.title || 'Video Platform'} />
         <meta property="og:description" content={videoDescription} />
         <meta property="og:image" content={video?.thumbnail?.replace('hqdefault', 'maxresdefault') || ''} />
+        <meta property="og:image:alt" content={`Thumbnail del video: ${video?.title || 'Video'}`} />
         <meta property="og:image:width" content="1280" />
         <meta property="og:image:height" content="720" />
         <meta property="og:image:type" content="image/jpeg" />
         <meta property="og:url" content={currentUrl} />
         <meta property="og:type" content="video.other" />
         <meta property="og:site_name" content="Video Platform" />
-        <meta property="og:video" content={`https://www.youtube.com/embed/${videoId}`} />
-        <meta property="og:video:url" content={`https://www.youtube.com/embed/${videoId}`} />
-        <meta property="og:video:secure_url" content={`https://www.youtube.com/embed/${videoId}`} />
+        <meta property="og:locale" content="it_IT" />
+        
+        {/* Facebook specific video meta tags */}
+        <meta property="og:video" content={`https://www.youtube.com/watch?v=${videoId}`} />
+        <meta property="og:video:url" content={`https://www.youtube.com/watch?v=${videoId}`} />
+        <meta property="og:video:secure_url" content={`https://www.youtube.com/watch?v=${videoId}`} />
         <meta property="og:video:type" content="text/html" />
         <meta property="og:video:width" content="1280" />
         <meta property="og:video:height" content="720" />
-        <meta property="og:locale" content="it_IT" />
         
         {/* Twitter Card tags */}
         <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@VideoPlattform" />
+        <meta name="twitter:creator" content="@VideoPlattform" />
         <meta name="twitter:title" content={video?.title || 'Video Platform'} />
         <meta name="twitter:description" content={videoDescription} />
-        <meta name="twitter:image" content={video?.thumbnail || ''} />
+        <meta name="twitter:image" content={video?.thumbnail?.replace('hqdefault', 'maxresdefault') || ''} />
+        <meta name="twitter:image:alt" content={`Thumbnail del video: ${video?.title || 'Video'}`} />
+        
+        {/* Additional meta tags for better sharing */}
+        <meta property="article:author" content={video?.channelTitle || 'Video Platform'} />
+        <meta property="article:published_time" content={video?.publishedAt || ''} />
+        <meta name="author" content={video?.channelTitle || 'Video Platform'} />
         
         {/* Video specific meta tags */}
         {video && (
           <>
             <meta property="video:duration" content={video.duration} />
             <meta property="video:release_date" content={video.publishedAt} />
-            <meta property="article:author" content={video.channelTitle} />
+            <meta name="video_type" content="application/x-shockwave-flash" />
           </>
         )}
+        
+        {/* Canonical URL */}
+        <link rel="canonical" href={currentUrl} />
       </Helmet>
       {/* Header */}
       <div className="p-4 border-b">
