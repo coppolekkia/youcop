@@ -115,6 +115,16 @@ export default {
 					'100%': {
 						transform: 'scale(1.02)'
 					}
+				},
+				'popup-fade': {
+					'0%': {
+						transform: 'translate(-50%, -60%)',
+						opacity: '0'
+					},
+					'100%': {
+						transform: 'translate(-50%, -50%)',
+						opacity: '1'
+					}
 				}
 			},
 			animation: {
@@ -122,7 +132,8 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.3s ease-out',
 				'scale-in': 'scale-in 0.2s ease-out',
-				'hover-scale': 'hover-scale 0.2s ease-out'
+				'hover-scale': 'hover-scale 0.2s ease-out',
+				'popup-fade': 'popup-fade 0.5s ease-out'
 			}
 		}
 	},

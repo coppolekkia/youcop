@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import VideoPlayer from "./pages/VideoPlayer";
 import NotFound from "./pages/NotFound";
+import { PopupOverlay } from "./components/PopupOverlay";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <PopupOverlay />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
