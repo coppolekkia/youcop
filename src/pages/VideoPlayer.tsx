@@ -146,19 +146,20 @@ const VideoPlayer = () => {
         )}
       </Helmet>
       {/* Header */}
-      <div className="p-4 border-b">
+      <div className="p-3 sm:p-4 border-b">
         <Button 
           variant="ghost" 
           onClick={() => navigate('/')}
+          size="sm"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
+          Indietro
         </Button>
       </div>
 
       {/* Video Player */}
-      <div className="max-w-6xl mx-auto p-4">
-        <div className="aspect-video mb-6">
+      <div className="max-w-6xl mx-auto p-3 sm:p-4">
+        <div className="aspect-video mb-4 sm:mb-6">
           <iframe
             src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
             title={video.title}
@@ -169,44 +170,44 @@ const VideoPlayer = () => {
         </div>
 
         {/* Video Info */}
-        <div className="space-y-4">
-          <h1 className="text-2xl font-bold">{video.title}</h1>
+        <div className="space-y-3 sm:space-y-4">
+          <h1 className="text-lg sm:text-2xl font-bold leading-tight">{video.title}</h1>
           
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center space-x-4">
-              <p className="text-muted-foreground">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              <p className="text-muted-foreground text-sm sm:text-base">
                 {formatViews(video.viewCount)} • {timeAgo}
               </p>
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
-                <ThumbsUp className="w-4 h-4 mr-2" />
-                Like
+            <div className="flex items-center gap-2 overflow-x-auto">
+              <Button variant="outline" size="sm" className="whitespace-nowrap">
+                <ThumbsUp className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Like</span>
               </Button>
-              <Button variant="outline" size="sm">
-                <ThumbsDown className="w-4 h-4" />
+              <Button variant="outline" size="sm" className="px-2 sm:px-3">
+                <ThumbsDown className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
               <ShareDialog 
                 videoId={videoId!}
                 videoTitle={video.title}
                 videoThumbnail={video.thumbnail}
               />
-              <Button variant="outline" size="sm">
-                <Download className="w-4 h-4 mr-2" />
-                Download
+              <Button variant="outline" size="sm" className="whitespace-nowrap hidden sm:flex">
+                <Download className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Download</span>
               </Button>
-              <Button variant="outline" size="sm">
-                <MoreHorizontal className="w-4 h-4" />
+              <Button variant="outline" size="sm" className="px-2 sm:px-3">
+                <MoreHorizontal className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
             </div>
           </div>
 
           {/* Channel Info */}
-          <div className="p-4 bg-muted/50 rounded-lg">
-            <h3 className="font-semibold text-lg mb-2">{video.channelTitle}</h3>
-            <p className="text-muted-foreground">
-              Subscribe for more content like this!
+          <div className="p-3 sm:p-4 bg-muted/50 rounded-lg">
+            <h3 className="font-semibold text-base sm:text-lg mb-2">{video.channelTitle}</h3>
+            <p className="text-muted-foreground text-sm sm:text-base">
+              Iscriviti per altri contenuti come questo!
             </p>
           </div>
         </div>

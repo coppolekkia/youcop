@@ -188,22 +188,22 @@ const Index = () => {
         totalVideos={filteredVideos.length}
       />
       
-      <main className="px-6 py-6">
+      <main className="px-3 sm:px-6 py-4 sm:py-6">
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3 sm:gap-4 md:gap-6">
             {Array.from({ length: 12 }).map((_, index) => (
               <div key={index} className="animate-pulse">
-                <div className="bg-muted rounded-lg mb-3 aspect-video"></div>
-                <div className="space-y-2">
-                  <div className="h-4 bg-muted rounded w-3/4"></div>
-                  <div className="h-3 bg-muted rounded w-1/2"></div>
-                  <div className="h-3 bg-muted rounded w-1/3"></div>
+                <div className="bg-muted rounded-lg mb-2 sm:mb-3 aspect-video"></div>
+                <div className="space-y-1 sm:space-y-2">
+                  <div className="h-3 sm:h-4 bg-muted rounded w-3/4"></div>
+                  <div className="h-2 sm:h-3 bg-muted rounded w-1/2"></div>
+                  <div className="h-2 sm:h-3 bg-muted rounded w-1/3"></div>
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3 sm:gap-4 md:gap-6">
             {filteredVideos.map((video) => (
               <VideoCard
                 key={video.id}

@@ -40,27 +40,27 @@ export function VideoCard({
 
   return (
     <div className="group cursor-pointer animate-fade-in" onClick={handleClick}>
-      <div className="relative overflow-hidden rounded-lg mb-3 bg-muted">
+      <div className="relative overflow-hidden rounded-lg mb-2 sm:mb-3 bg-muted">
         <img 
           src={thumbnail} 
           alt={title}
           className="w-full aspect-video object-cover transition-transform duration-300 group-hover:scale-105"
         />
         {duration && (
-          <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
+          <div className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-black/80 text-white text-xs px-1 sm:px-2 py-0.5 sm:py-1 rounded">
             {duration}
           </div>
         )}
       </div>
       
-      <div className="space-y-1">
-        <h3 className="font-medium text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors duration-200">
+      <div className="space-y-0.5 sm:space-y-1">
+        <h3 className="font-medium text-xs sm:text-sm leading-tight line-clamp-2 group-hover:text-primary transition-colors duration-200">
           {title}
         </h3>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-xs sm:text-sm line-clamp-1">
           {channelTitle}
         </p>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-xs sm:text-sm">
           {formatViews(viewCount)} • {timeAgo}
         </p>
       </div>

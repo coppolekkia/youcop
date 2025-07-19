@@ -81,24 +81,24 @@ export function VideoFilters({ filters, onFiltersChange, onClearFilters, totalVi
 
   return (
     <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="px-6 py-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
+      <div className="px-3 sm:px-6 py-3 sm:py-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-3 sm:mb-4">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Button
               variant="outline"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 text-xs sm:text-sm"
             >
-              <Filter className="w-4 h-4" />
+              <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
               Filtri
               {activeFiltersCount > 0 && (
-                <Badge variant="secondary" className="ml-1">
+                <Badge variant="secondary" className="ml-1 text-xs">
                   {activeFiltersCount}
                 </Badge>
               )}
             </Button>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-xs sm:text-sm text-muted-foreground">
               {totalVideos} video{totalVideos !== 1 ? 's' : ''}
             </span>
           </div>
@@ -108,19 +108,20 @@ export function VideoFilters({ filters, onFiltersChange, onClearFilters, totalVi
               variant="ghost"
               size="sm"
               onClick={onClearFilters}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 text-xs sm:text-sm"
             >
-              <X className="w-4 h-4" />
-              Cancella filtri
+              <X className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Cancella filtri</span>
+              <span className="sm:hidden">Cancella</span>
             </Button>
           )}
         </div>
 
         {/* Quick Sort Filter - Always Visible */}
         <div className="flex items-center gap-2 mb-3">
-          <SortAsc className="w-4 h-4 text-muted-foreground" />
+          <SortAsc className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
           <Select value={filters.sortBy} onValueChange={(value) => updateFilter('sortBy', value as FilterOptions['sortBy'])}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full sm:w-[180px] text-xs sm:text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -135,15 +136,15 @@ export function VideoFilters({ filters, onFiltersChange, onClearFilters, totalVi
 
         {/* Expanded Filters */}
         {isExpanded && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-3 border-t">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 pt-3 border-t">
             {/* Upload Date Filter */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-muted-foreground" />
-                <label className="text-sm font-medium">Data di caricamento</label>
+                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                <label className="text-xs sm:text-sm font-medium">Data di caricamento</label>
               </div>
               <Select value={filters.uploadDate} onValueChange={(value) => updateFilter('uploadDate', value as FilterOptions['uploadDate'])}>
-                <SelectTrigger>
+                <SelectTrigger className="text-xs sm:text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -160,11 +161,11 @@ export function VideoFilters({ filters, onFiltersChange, onClearFilters, totalVi
             {/* Duration Filter */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-muted-foreground" />
-                <label className="text-sm font-medium">Durata</label>
+                <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                <label className="text-xs sm:text-sm font-medium">Durata</label>
               </div>
               <Select value={filters.duration} onValueChange={(value) => updateFilter('duration', value as FilterOptions['duration'])}>
-                <SelectTrigger>
+                <SelectTrigger className="text-xs sm:text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -179,11 +180,11 @@ export function VideoFilters({ filters, onFiltersChange, onClearFilters, totalVi
             {/* View Count Filter */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-muted-foreground" />
-                <label className="text-sm font-medium">Visualizzazioni</label>
+                <Eye className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
+                <label className="text-xs sm:text-sm font-medium">Visualizzazioni</label>
               </div>
               <Select value={filters.viewCount} onValueChange={(value) => updateFilter('viewCount', value as FilterOptions['viewCount'])}>
-                <SelectTrigger>
+                <SelectTrigger className="text-xs sm:text-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
