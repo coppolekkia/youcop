@@ -31,10 +31,13 @@ const Index = () => {
   ];
 
   const loadCategoryVideos = async () => {
+    console.log('Starting to load category videos...');
     setLoading(true);
     try {
       const categoryPromises = popularCategories.map(async (category) => {
+        console.log(`Loading videos for category: ${category}`);
         const videos = await youtubeApi.getPopularVideos(YOUTUBE_CATEGORIES[category], 6);
+        console.log(`Videos loaded for ${category}:`, videos.length);
         return {
           category,
           categoryId: YOUTUBE_CATEGORIES[category],
@@ -43,7 +46,10 @@ const Index = () => {
       });
 
       const results = await Promise.all(categoryPromises);
-      setCategoryVideos(results.filter(result => result.videos.length > 0));
+      console.log('All category results:', results);
+      const filteredResults = results.filter(result => result.videos.length > 0);
+      console.log('Filtered results:', filteredResults);
+      setCategoryVideos(filteredResults);
     } catch (error) {
       console.error('Error loading category videos:', error);
       toast({
