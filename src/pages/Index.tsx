@@ -4,6 +4,7 @@ import { CategoryNav } from '@/components/CategoryNav';
 import { VideoCard } from '@/components/VideoCard';
 import { youtubeApi, YouTubeVideo, YOUTUBE_CATEGORIES } from '@/services/youtubeApi';
 import { useToast } from '@/hooks/use-toast';
+import { Helmet } from 'react-helmet-async';
 
 interface CategoryVideos {
   category: string;
@@ -120,6 +121,24 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Video Platform - I Video Più Visti del Giorno</title>
+        <meta name="description" content="Scopri i video più popolari di oggi divisi per categoria: Musica, Gaming, Intrattenimento, Sport e molto altro!" />
+        
+        {/* Open Graph tags */}
+        <meta property="og:title" content="Video Platform - I Video Più Visti del Giorno" />
+        <meta property="og:description" content="Scopri i video più popolari di oggi divisi per categoria: Musica, Gaming, Intrattenimento, Sport e molto altro!" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={window.location.href} />
+        <meta property="og:site_name" content="Video Platform" />
+        <meta property="og:locale" content="it_IT" />
+        
+        {/* Twitter Cards */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@VideoPlatform" />
+        <meta name="twitter:title" content="Video Platform - I Video Più Visti del Giorno" />
+        <meta name="twitter:description" content="Scopri i video più popolari di oggi divisi per categoria: Musica, Gaming, Intrattenimento, Sport e molto altro!" />
+      </Helmet>
       <Header onSearch={handleSearch} searchQuery={searchQuery} />
       
       {!searchQuery && (
