@@ -87,9 +87,10 @@ const VideoPlayer = () => {
     );
   }
 
-  const currentUrl = `${window.location.origin}/video/${videoId}`;
-  const videoDescription = video?.description || `Watch ${video?.title} on our platform`;
+  const currentUrl = window.location.href;
+  const videoDescription = video?.description?.slice(0, 160) || `Guarda "${video?.title}" di ${video?.channelTitle}`;
   const timeAgo = formatDistanceToNow(new Date(video.publishedAt), { addSuffix: true });
+  const highResThumb = video?.thumbnail?.replace('hqdefault', 'maxresdefault').replace('default', 'maxresdefault');
 
   return (
     <div className="min-h-screen bg-background">
@@ -99,8 +100,8 @@ const VideoPlayer = () => {
         
         {/* Rimuovi meta tag di default e sostituisci con quelli specifici del video */}
         <meta property="og:title" content={video?.title || 'Video Platform'} />
-        <meta property="og:description" content={video?.title ? `Guarda "${video.title}" di ${video.channelTitle}. Video incredibile!` : videoDescription} />
-        <meta property="og:image" content={video?.thumbnail?.replace('hqdefault', 'maxresdefault') || ''} />
+        <meta property="og:description" content={videoDescription} />
+        <meta property="og:image" content={highResThumb || ''} />
         <meta property="og:image:alt" content={`Anteprima: ${video?.title || 'Video'}`} />
         <meta property="og:image:width" content="1280" />
         <meta property="og:image:height" content="720" />
@@ -123,8 +124,8 @@ const VideoPlayer = () => {
         <meta name="twitter:site" content="@VideoPlattform" />
         <meta name="twitter:creator" content={`@${video?.channelTitle?.replace(/\s+/g, '') || 'VideoPlattform'}`} />
         <meta name="twitter:title" content={video?.title || 'Video Platform'} />
-        <meta name="twitter:description" content={video?.title ? `Guarda "${video.title}" di ${video.channelTitle}` : videoDescription} />
-        <meta name="twitter:image" content={video?.thumbnail?.replace('hqdefault', 'maxresdefault') || ''} />
+        <meta name="twitter:description" content={videoDescription} />
+        <meta name="twitter:image" content={highResThumb || ''} />
         <meta name="twitter:image:alt" content={`Anteprima del video: ${video?.title || 'Video'}`} />
         <meta name="twitter:player" content={`https://www.youtube.com/embed/${videoId}`} />
         <meta name="twitter:player:width" content="1280" />
