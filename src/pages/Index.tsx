@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Header } from '@/components/Header';
 import { CategoryNav } from '@/components/CategoryNav';
 import { VideoCard } from '@/components/VideoCard';
+import { VideoFilters, FilterOptions } from '@/components/VideoFilters';
 import { youtubeApi, YouTubeVideo, YOUTUBE_CATEGORIES } from '@/services/youtubeApi';
 import { useToast } from '@/hooks/use-toast';
 import { Helmet } from 'react-helmet-async';
@@ -17,6 +18,13 @@ const Index = () => {
   const [categoryVideos, setCategoryVideos] = useState<CategoryVideos[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const [filters, setFilters] = useState<FilterOptions>({
+    sortBy: 'relevance',
+    uploadDate: 'all',
+    duration: 'all',
+    viewCount: 'all'
+  });
   const { toast } = useToast();
 
   // Categorie principali da mostrare in home
@@ -105,6 +113,23 @@ const Index = () => {
     setActiveCategory('All'); // Reset to All when searching
   };
 
+  const handleViewAll = (category: string) => {
+    setExpandedCategories(prev => [...prev, category]);
+  };
+
+  const handleFiltersChange = (newFilters: FilterOptions) => {
+    setFilters(newFilters);
+  };
+
+  const handleClearFilters = () => {
+    setFilters({
+      sortBy: 'relevance',
+      uploadDate: 'all',
+      duration: 'all',
+      viewCount: 'all'
+    });
+  };
+
   const totalVideos = useMemo(() => {
     return categoryVideos.reduce((total, category) => total + category.videos.length, 0);
   }, [categoryVideos]);
@@ -148,6 +173,14 @@ const Index = () => {
         />
       )}
       
+      {/* Video Filters */}
+      <VideoFilters 
+        filters={filters}
+        onFiltersChange={handleFiltersChange}
+        onClearFilters={handleClearFilters}
+        totalVideos={totalVideos}
+      />
+      
       <main className="px-3 sm:px-6 py-4 sm:py-6">
         {loading ? (
           <div className="space-y-8">
@@ -178,15 +211,20 @@ const Index = () => {
                   <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground">
                     {searchQuery ? 'Risultati della ricerca' : `Video più visti in ${categoryData.category}`}
                   </h2>
-                  {!searchQuery && categoryData.videos.length === 6 && (
-                    <button className="text-sm text-primary hover:text-primary/80 transition-colors">
+                  {!searchQuery && categoryData.videos.length === 6 && !expandedCategories.includes(categoryData.category) && (
+                    <button 
+                      onClick={() => handleViewAll(categoryData.category)}
+                      className="text-sm text-primary hover:text-primary/80 transition-colors"
+                    >
                       Vedi tutti
                     </button>
                   )}
                 </div>
                 
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
-                  {categoryData.videos.map((video) => (
+                  {categoryData.videos
+                    .slice(0, expandedCategories.includes(categoryData.category) ? undefined : 6)
+                    .map((video) => (
                     <VideoCard
                       key={video.id}
                       {...video}
