@@ -44,11 +44,11 @@ const Index = () => {
     try {
       const categoryPromises = popularCategories.map(async (category) => {
         try {
-          const videos = await youtubeApi.getPopularVideos(YOUTUBE_CATEGORIES[category], 6);
+          const videos = await youtubeApi.getPopularVideos(YOUTUBE_CATEGORIES[category], 20); // Carica più video
           return {
             category,
             categoryId: YOUTUBE_CATEGORIES[category],
-            videos: videos.slice(0, 6)
+            videos: videos
           };
         } catch (error) {
           console.error(`Error loading videos for category ${category}:`, error);
@@ -211,12 +211,12 @@ const Index = () => {
                   <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground">
                     {searchQuery ? 'Risultati della ricerca' : `Video più visti in ${categoryData.category}`}
                   </h2>
-                  {!searchQuery && categoryData.videos.length === 6 && !expandedCategories.includes(categoryData.category) && (
+                  {!searchQuery && categoryData.videos.length > 6 && !expandedCategories.includes(categoryData.category) && (
                     <button 
                       onClick={() => handleViewAll(categoryData.category)}
                       className="text-sm text-primary hover:text-primary/80 transition-colors"
                     >
-                      Vedi tutti
+                      Vedi tutti ({categoryData.videos.length})
                     </button>
                   )}
                 </div>
