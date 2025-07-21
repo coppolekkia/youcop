@@ -16,14 +16,29 @@ export function ShareDialog({ videoId, videoTitle, videoThumbnail }: ShareDialog
   const { toast } = useToast();
   
   const videoUrl = `${window.location.origin}/video/${videoId}`;
+  
+  // Genera hashtag dal titolo del video
+  const generateHashtags = (title: string) => {
+    const words = title.toLowerCase()
+      .replace(/[^\w\s]/g, '') // Rimuove punteggiatura
+      .split(' ')
+      .filter(word => word.length > 3) // Solo parole lunghe
+      .slice(0, 3) // Massimo 3 hashtag
+      .map(word => `#${word}`);
+    return words.join(' ');
+  };
+
+  const hashtags = generateHashtags(videoTitle);
+  const shareText = `🎬 Guarda questo video! ✨\n\n"${videoTitle}"\n\n${hashtags} #video #watch`;
+  
   const encodedUrl = encodeURIComponent(videoUrl);
-  const encodedTitle = encodeURIComponent(videoTitle);
+  const encodedShareText = encodeURIComponent(shareText);
 
   const shareLinks = {
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-    twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-    whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
-    telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedShareText}`,
+    twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedShareText}`,
+    whatsapp: `https://wa.me/?text=${encodedShareText}%20${encodedUrl}`,
+    telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedShareText}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
   };
 
