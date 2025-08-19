@@ -106,6 +106,37 @@ const Index = () => {
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category);
     setSearchQuery(''); // Clear search when changing category
+    
+    // Se la categoria selezionata non è 'All' e non abbiamo ancora i video per quella categoria, caricali
+    if (category !== 'All' && !categoryVideos.some(cat => cat.category === category)) {
+      loadSpecificCategory(category);
+    }
+  };
+
+  const loadSpecificCategory = async (category: string) => {
+    if (category === 'All') return;
+    
+    setLoading(true);
+    try {
+      const videos = await youtubeApi.getPopularVideos(YOUTUBE_CATEGORIES[category], 50);
+      setCategoryVideos(prev => {
+        const filtered = prev.filter(cat => cat.category !== category);
+        return [...filtered, {
+          category,
+          categoryId: YOUTUBE_CATEGORIES[category],
+          videos: videos
+        }];
+      });
+    } catch (error) {
+      console.error(`Error loading videos for category ${category}:`, error);
+      toast({
+        title: "Error",
+        description: `Failed to load ${category} videos. Please try again.`,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSearch = (query: string) => {
@@ -134,15 +165,106 @@ const Index = () => {
     return categoryVideos.reduce((total, category) => total + category.videos.length, 0);
   }, [categoryVideos]);
 
-  // Filtra le categorie quando c'è una ricerca attiva
+  // Applica i filtri ai video
+  const applyFilters = (videos: YouTubeVideo[]) => {
+    let filteredVideos = [...videos];
+
+    // Filtro per durata
+    if (filters.duration !== 'all') {
+      filteredVideos = filteredVideos.filter(video => {
+        const duration = video.duration;
+        const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+        if (match) {
+          const hours = parseInt(match[1] || '0');
+          const minutes = parseInt(match[2] || '0');
+          const seconds = parseInt(match[3] || '0');
+          const totalMinutes = hours * 60 + minutes + seconds / 60;
+          
+          switch (filters.duration) {
+            case 'short': return totalMinutes < 4;
+            case 'medium': return totalMinutes >= 4 && totalMinutes <= 20;
+            case 'long': return totalMinutes > 20;
+            default: return true;
+          }
+        }
+        return true;
+      });
+    }
+
+    // Filtro per visualizzazioni
+    if (filters.viewCount !== 'all') {
+      filteredVideos = filteredVideos.filter(video => {
+        const views = video.viewCount;
+        switch (filters.viewCount) {
+          case 'low': return views < 100000;
+          case 'medium': return views >= 100000 && views <= 1000000;
+          case 'high': return views > 1000000;
+          default: return true;
+        }
+      });
+    }
+
+    // Filtro per data di upload
+    if (filters.uploadDate !== 'all') {
+      const now = new Date();
+      filteredVideos = filteredVideos.filter(video => {
+        const uploadDate = new Date(video.publishedAt);
+        const diffTime = now.getTime() - uploadDate.getTime();
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        switch (filters.uploadDate) {
+          case 'hour': return diffTime <= 1000 * 60 * 60;
+          case 'today': return diffDays <= 1;
+          case 'week': return diffDays <= 7;
+          case 'month': return diffDays <= 30;
+          case 'year': return diffDays <= 365;
+          default: return true;
+        }
+      });
+    }
+
+    // Ordinamento
+    if (filters.sortBy !== 'relevance') {
+      filteredVideos.sort((a, b) => {
+        switch (filters.sortBy) {
+          case 'newest':
+            return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+          case 'oldest':
+            return new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime();
+          case 'mostViewed':
+            return b.viewCount - a.viewCount;
+          case 'leastViewed':
+            return a.viewCount - b.viewCount;
+          default:
+            return 0;
+        }
+      });
+    }
+
+    return filteredVideos;
+  };
+
+  // Filtra e ordina le categorie
   const displayCategories = useMemo(() => {
     if (searchQuery.trim()) {
-      return categoryVideos;
+      return categoryVideos.map(category => ({
+        ...category,
+        videos: applyFilters(category.videos)
+      }));
     }
     
-    // Se non c'è ricerca, mostra tutte le categorie caricate
-    return categoryVideos;
-  }, [categoryVideos, searchQuery]);
+    // Applica filtri anche per la visualizzazione normale
+    return categoryVideos
+      .map(category => ({
+        ...category,
+        videos: applyFilters(category.videos)
+      }))
+      .filter(category => {
+        // Filtra in base alla categoria attiva
+        if (activeCategory === 'All') return true;
+        return category.category === activeCategory;
+      });
+  }, [categoryVideos, searchQuery, filters, activeCategory]);
 
   return (
     <div className="min-h-screen bg-background">
