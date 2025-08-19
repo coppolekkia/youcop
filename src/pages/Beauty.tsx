@@ -175,9 +175,21 @@ export default function Beauty() {
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-beauty-primary-foreground bg-clip-text">
               💄 Beauty & Makeup
             </h1>
-            <p className="text-lg sm:text-xl opacity-95 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl opacity-95 max-w-2xl mx-auto mb-6">
               Scopri i migliori tutorial di bellezza, consigli di makeup e routine di skincare per valorizzare la tua naturale bellezza ✨
             </p>
+            <a 
+              href="https://amzn.to/45Hdhoc" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block hover:scale-105 transition-transform duration-300"
+            >
+              <img 
+                src="/lovable-uploads/a5136b04-66fa-4708-a588-8a4c3bf1de64.png" 
+                alt="Sconti prodotti bellezza - La tua routine di bellezza a prezzo speciale"
+                className="max-w-md mx-auto rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
+              />
+            </a>
           </div>
         </div>
 
