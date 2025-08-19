@@ -36,6 +36,15 @@ All colors MUST be HSL.
     --input: 214 32% 91%;
     --ring: 0 100% 50%;
 
+    /* Beauty theme colors */
+    --beauty-primary: 330 80% 60%;
+    --beauty-primary-foreground: 0 0% 100%;
+    --beauty-secondary: 320 40% 95%;
+    --beauty-secondary-foreground: 330 80% 30%;
+    --beauty-accent: 320 50% 90%;
+    --beauty-accent-foreground: 330 80% 40%;
+    --beauty-gradient: linear-gradient(135deg, hsl(330 80% 70%), hsl(340 70% 60%));
+
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
@@ -83,6 +92,16 @@ All colors MUST be HSL.
     --border: 15 23% 15%;
     --input: 15 23% 15%;
     --ring: 0 100% 50%;
+    
+    /* Beauty theme colors - dark mode */
+    --beauty-primary: 330 80% 70%;
+    --beauty-primary-foreground: 0 0% 100%;
+    --beauty-secondary: 320 30% 20%;
+    --beauty-secondary-foreground: 330 80% 90%;
+    --beauty-accent: 320 40% 25%;
+    --beauty-accent-foreground: 330 80% 85%;
+    --beauty-gradient: linear-gradient(135deg, hsl(330 70% 60%), hsl(340 60% 50%));
+    
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

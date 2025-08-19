@@ -64,6 +64,15 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				beauty: {
+					primary: 'hsl(var(--beauty-primary))',
+					'primary-foreground': 'hsl(var(--beauty-primary-foreground))',
+					secondary: 'hsl(var(--beauty-secondary))',
+					'secondary-foreground': 'hsl(var(--beauty-secondary-foreground))',
+					accent: 'hsl(var(--beauty-accent))',
+					'accent-foreground': 'hsl(var(--beauty-accent-foreground))',
+					gradient: 'var(--beauty-gradient)'
 				}
 			},
 			borderRadius: {

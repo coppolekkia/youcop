@@ -37,7 +37,8 @@ export const YOUTUBE_CATEGORIES = {
   'News & Politics': '25',
   'Howto & Style': '26',
   'Education': '27',
-  'Science & Technology': '28'
+  'Science & Technology': '28',
+  'Bellezza': '26' // Howto & Style include beauty content
 };
 
 class YouTubeApiService {
